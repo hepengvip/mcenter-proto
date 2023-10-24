@@ -130,7 +130,7 @@ func ParseReply(cmdStr string, parts []string) (*Message, error) {
 
 	var reqId, payload string
 	if len(parts) == 2 {
-		reqId, payload = parts[1], parts[2]
+		reqId, payload = "", parts[1]
 	} else if len(parts) == 3 {
 		reqId, payload = parts[1], parts[2]
 	} else {
