@@ -5,12 +5,12 @@ import (
 	"io"
 )
 
-func ReadFull(r io.Reader, msgSize int) ([]byte, error) {
-	buff := make([]byte, msgSize)
+func ReadFull(r *bufio.Reader, buff []byte) error {
 	_, err := io.ReadFull(r, buff)
-	return buff, err
+	return err
 }
 
-func ReadHeader(r bufio.Reader, sep byte) ([]byte, error) {
-	return r.ReadBytes(sep)
+func ReadHeader(r *bufio.Reader, sep byte) (*[]byte, error) {
+	data, err := r.ReadBytes(sep)
+	return &data, err
 }
