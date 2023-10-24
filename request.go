@@ -43,3 +43,15 @@ func (m *Message) ReadPayload(r *bufio.Reader) error {
 	}
 	return nil
 }
+
+func (m *Message) ToReply() (*Response, error) {
+	if m.ReqType != MSG_REPLY {
+		return nil, fmt.Errorf("cannot convert %s message to reply", m.ReqType)
+	}
+
+	return &Response{
+		ReqId:   m.ReqId,
+		ReqCode: m.PayloadSize,
+		ReqMsg:  string(*m.Payload),
+	}, nil
+}
