@@ -1,8 +1,8 @@
 package mcenterproto
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 )
 
 type Message struct {
@@ -11,7 +11,7 @@ type Message struct {
 	UserId      string
 	Channel     string
 	PayloadSize int
-	Payload     []byte
+	Payload     *[]byte
 }
 
 func (m *Message) ToBytes() []byte {
@@ -24,23 +24,22 @@ func (m *Message) ToBytes() []byte {
 	case MSG_SET_USER:
 		return []byte(fmt.Sprintf("%s %s", prefix, m.UserId))
 	case MSG_PUBLISH:
-		header := []byte(fmt.Sprintf("%s %s %d\n", prefix, m.Channel, len(m.Payload)))
-		header = append(header, m.Payload...)
+		header := []byte(fmt.Sprintf("%s %s %d\n", prefix, m.Channel, len(*m.Payload)))
+		header = append(header, *m.Payload...)
 		return header
 	case MSG_MESSAGE:
-		header := []byte(fmt.Sprintf("%s %s %s %d\n", m.ReqType, m.UserId, m.Channel, len(m.Payload)))
-		header = append(header, m.Payload...)
+		header := []byte(fmt.Sprintf("%s %s %s %d\n", m.ReqType, m.UserId, m.Channel, len(*m.Payload)))
+		header = append(header, *m.Payload...)
 		return header
 	default:
 		return []byte(fmt.Sprintf("%s %s", prefix, m.Channel))
 	}
 }
 
-func (m *Message) ReadPayload(r io.Reader) error {
-	data, err := ReadFull(r, m.PayloadSize)
+func (m *Message) ReadPayload(r *bufio.Reader) error {
+	err := ReadFull(r, *m.Payload)
 	if err != nil {
 		return err
 	}
-	m.Payload = data
 	return nil
 }

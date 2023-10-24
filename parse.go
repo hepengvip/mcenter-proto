@@ -109,10 +109,13 @@ func ParsePublish(cmdStr string, parts []string) (*Message, error) {
 		return nil, fmt.Errorf("%d:message size field parse error - %s", BAD_REQUEST, cmdStr)
 	}
 
+	payload := make([]byte, msgSize)
+
 	return &Message{
 		ReqType:     MSG_PUBLISH,
 		ReqId:       reqId,
 		Channel:     channel,
 		PayloadSize: msgSize,
+		Payload:     &payload,
 	}, nil
 }
