@@ -133,6 +133,8 @@ func ParseReply(cmdStr string, parts []string) (*Message, error) {
 		reqId, payload = "", parts[1]
 	} else if len(parts) == 3 {
 		reqId, payload = parts[1], parts[2]
+	} else if len(parts) == 4 {
+		reqId, payload = parts[1], fmt.Sprintf("%s %s", parts[2], parts[3])
 	} else {
 		return nil, fmt.Errorf("%d:%s", BAD_REPLY, cmdStr)
 	}
